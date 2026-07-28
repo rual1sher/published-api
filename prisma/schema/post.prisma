@@ -1,0 +1,26 @@
+model Post {
+    id          String     @id @default(uuid())
+    text        String?
+    imageUrl    String?
+    channelId   String
+    channel     Channels   @relation(fields: [channelId], references: [id])
+    userId      String
+    user        Users      @relation(fields: [userId], references: [id])
+    tgMessageId Int?
+    status      PostStatus @default(QUEUED)
+    date        DateTime   @db.Timestamp()
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime?
+
+    @@map("posts")
+}
+
+enum PostStatus {
+    DRAFT
+    QUEUED
+    PUBLISHING
+    PUBLISHED
+    FAILED
+}

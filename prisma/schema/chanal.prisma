@@ -1,0 +1,15 @@
+model Channels {
+    id       String @id @default(uuid())
+    username String @map("channel_username") // "@cats_channel" или "-1001234567890"
+    title    String // "Котики" — для UI
+    ownerId  String
+    owner    Users  @relation(fields: [ownerId], references: [id])
+
+    posts Post[]
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime?
+
+    @@map("channels")
+}
