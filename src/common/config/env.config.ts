@@ -1,8 +1,8 @@
 import "dotenv/config";
 
 export const env = {
-  port: process.env.PORT || 3000,
-  appUrl: process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`,
+  port: process.env.PORT,
+  appUrl: process.env.APP_URL,
   jwt: {
     accessToken: process.env.ACCESS_TOKEN,
     refreshToken: process.env.REFRESH_TOKEN,

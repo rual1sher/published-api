@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.9.0",
   "engineVersion": "e922089b7d7502aff4249d5da3420f6fa55fc6ad",
   "activeProvider": "postgresql",
-  "inlineSchema": "model Channels {\n  id       String @id @default(uuid())\n  username String @map(\"channel_username\") // \"@cats_channel\" или \"-1001234567890\"\n  title    String // \"Котики\" — для UI\n  ownerId  String\n  owner    Users  @relation(fields: [ownerId], references: [id])\n\n  posts Post[]\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  deletedAt DateTime?\n\n  @@map(\"channels\")\n}\n\nmodel Post {\n  id          String     @id @default(uuid())\n  text        String?\n  imageUrl    String?\n  channelId   String\n  channel     Channels   @relation(fields: [channelId], references: [id])\n  userId      String\n  user        Users      @relation(fields: [userId], references: [id])\n  tgMessageId Int?\n  status      PostStatus @default(QUEUED)\n  date        DateTime   @db.Timestamp()\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  deletedAt DateTime?\n\n  @@map(\"posts\")\n}\n\nenum PostStatus {\n  DRAFT\n  QUEUED\n  PUBLISHING\n  PUBLISHED\n  FAILED\n}\n\ngenerator client {\n  provider = \"prisma-client\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Users {\n  id String @id @default(cuid())\n\n  fullname String\n  username String\n  password String\n  token    String?\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  deletedAt DateTime?\n\n  channels Channels[]\n  posts    Post[]\n\n  @@map(\"users\")\n}\n",
+  "inlineSchema": "model Channels {\n  id       String @id @default(uuid())\n  username String @map(\"channel_username\") // \"@cats_channel\" или \"-1001234567890\"\n  title    String // \"Котики\" — для UI\n  ownerId  String\n  owner    Users  @relation(fields: [ownerId], references: [id])\n\n  posts Post[]\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  deletedAt DateTime?\n\n  @@map(\"channels\")\n}\n\nmodel Post {\n  id          String     @id @default(uuid())\n  text        String?\n  imageUrl    String?\n  channelId   String\n  channel     Channels   @relation(fields: [channelId], references: [id])\n  userId      String\n  user        Users      @relation(fields: [userId], references: [id])\n  tgMessageId Int?\n  status      PostStatus @default(QUEUED)\n  date        DateTime   @db.Timestamp()\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  deletedAt DateTime?\n\n  @@map(\"posts\")\n}\n\nenum PostStatus {\n  DRAFT\n  QUEUED\n  PUBLISHING\n  PUBLISHED\n  FAILED\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"../generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Users {\n  id String @id @default(cuid())\n\n  fullname String\n  username String\n  password String\n  token    String?\n\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @updatedAt\n  deletedAt DateTime?\n\n  channels Channels[]\n  posts    Post[]\n\n  @@map(\"users\")\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -45,10 +45,10 @@ async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Modul
 }
 
 config.compilerWasm = {
-  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.mjs"),
+  getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.js"),
 
   getQueryCompilerWasmModule: async () => {
-    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.mjs")
+    const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js")
     return await decodeBase64AsWasm(wasm)
   },
 
